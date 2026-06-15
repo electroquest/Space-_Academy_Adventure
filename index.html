@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Space Academy Adventure — Misi Tata Surya</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<canvas id="starfield"></canvas>
+
+<header class="topbar">
+  <div class="topbar__brand">
+    <span class="topbar__mark">✦</span>
+    <span>Space Academy Adventure</span>
+  </div>
+  <div class="rankbadge" id="rankBadge" aria-live="polite">
+    <div class="rankbadge__icon" id="rankIcon"></div>
+    <div class="rankbadge__text">
+      <span class="rankbadge__label">Pangkat</span>
+      <span class="rankbadge__value" id="rankValue">Kadet</span>
+    </div>
+    <div class="rankbadge__score" id="scoreValue">0 Poin</div>
+  </div>
+</header>
+
+<!-- ===================== HOME ===================== -->
+<section class="screen screen--home" id="screen-home">
+  <div class="home__content">
+    <p class="eyebrow">Akademi Antariksa — Program Pelatihan Taruna</p>
+    <h1 class="home__title">Petualangan<br>Akademi Antariksa</h1>
+    <p class="home__lead">
+      Belajar Tata Surya jadi seru! Kamu akan memulai pelatihan sebagai
+      <strong>Kadet</strong>, menjalankan lima misi penjelajahan, dan setiap
+      keputusanmu menentukan apakah kamu naik pangkat menjadi
+      Pilot, Kapten, hingga <strong>Komandan Antariksa</strong>.
+    </p>
+
+    <form id="cadetForm" class="cadetform">
+      <label class="cadetform__field">
+        <span>Nama Taruna</span>
+        <input type="text" id="cadetName" placeholder="Masukkan nama" required>
+      </label>
+      <label class="cadetform__field">
+        <span>Kelas</span>
+        <input type="text" id="cadetClass" placeholder="Contoh: VII A" required>
+      </label>
+      <button type="submit" class="btn btn--primary">Mulai Misi</button>
+    </form>
+
+    <button class="btn btn--ghost" id="btnGuide">Lihat Panduan Misi</button>
+  </div>
+
+  <div class="home__map" aria-hidden="true">
+    <svg viewBox="0 0 420 420" class="orbitsvg">
+      <circle cx="210" cy="210" r="6" class="orbit__sun"/>
+      <circle cx="210" cy="210" r="50" class="orbit__ring"/>
+      <circle cx="210" cy="210" r="95" class="orbit__ring"/>
+      <circle cx="210" cy="210" r="140" class="orbit__ring"/>
+      <circle cx="210" cy="210" r="185" class="orbit__ring"/>
+      <circle class="orbit__planet orbit__planet--1" r="6"/>
+      <circle class="orbit__planet orbit__planet--2" r="8"/>
+      <circle class="orbit__planet orbit__planet--3" r="10"/>
+      <circle class="orbit__planet orbit__planet--4" r="12"/>
+    </svg>
+  </div>
+</section>
+
+<!-- ===================== GUIDE ===================== -->
+<section class="screen" id="screen-guide" hidden>
+  <div class="panel">
+    <p class="eyebrow">Petunjuk</p>
+    <h2 class="panel__title">Panduan Misi</h2>
+    <ol class="guidelist">
+      <li>Kamu akan menjalani <strong>5 level misi</strong> seputar Tata Surya, dari mengenal anggota tata surya hingga misi akhir.</li>
+      <li>Setiap level berisi pertanyaan dengan beberapa pilihan jawaban (<em>branching narrative</em>).</li>
+      <li>Jawaban <strong>benar</strong> memberi poin penuh dan membuka penjelasan singkat. Jawaban <strong>hampir benar</strong> memberi sedikit poin dan kesempatan mencoba ulang. Jawaban <strong>salah</strong> memberi jalur remedial berupa penjelasan konsep.</li>
+      <li>Total poinmu menentukan kenaikan pangkat: <strong>Kadet → Pilot → Kapten → Komandan Antariksa</strong>.</li>
+      <li>Selesaikan seluruh 5 level untuk menyelesaikan misi dan melihat pangkat akhirmu serta Laporan Misi.</li>
+    </ol>
+    <button class="btn btn--primary" id="btnBackHome">Kembali</button>
+  </div>
+</section>
+
+<!-- ===================== LEVEL ===================== -->
+<section class="screen screen--level" id="screen-level" hidden>
+  <div class="levelbar">
+    <div class="levelbar__track" id="levelTrack"></div>
+    <div class="levelbar__label" id="levelLabel">Level 1 dari 5</div>
+  </div>
+
+  <div class="missioncard" id="missionCard">
+    <p class="eyebrow" id="missionEyebrow">Level 1 — Mengenal Anggota Tata Surya</p>
+    <h2 class="missioncard__title" id="missionTitle"></h2>
+    <p class="missioncard__story" id="missionStory"></p>
+
+    <div class="missioncard__question" id="questionBlock">
+      <p class="missioncard__question-text" id="questionText"></p>
+      <div class="choices" id="choicesBlock"></div>
+    </div>
+
+    <div class="feedback" id="feedbackBlock" hidden>
+      <p class="feedback__tag" id="feedbackTag"></p>
+      <p class="feedback__text" id="feedbackText"></p>
+      <button class="btn btn--primary" id="btnContinue">Lanjutkan</button>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== RESULT ===================== -->
+<section class="screen" id="screen-result" hidden>
+  <div class="panel panel--result">
+    <p class="eyebrow">Misi Selesai</p>
+    <h2 class="panel__title" id="resultTitle">Laporan Misi</h2>
+
+    <div class="resultbadge">
+      <div class="resultbadge__icon" id="resultIcon"></div>
+      <div>
+        <p class="resultbadge__rank" id="resultRank">Komandan Antariksa</p>
+        <p class="resultbadge__cadet" id="resultCadet"></p>
+      </div>
+    </div>
+
+    <div class="resultstats">
+      <div class="resultstats__item">
+        <span class="resultstats__num" id="resultScore">0</span>
+        <span class="resultstats__label">Total Poin</span>
+      </div>
+      <div class="resultstats__item">
+        <span class="resultstats__num" id="resultCorrect">0/5</span>
+        <span class="resultstats__label">Jawaban Tepat</span>
+      </div>
+    </div>
+
+    <p class="resultmsg" id="resultMessage"></p>
+
+    <button class="btn btn--primary" id="btnRestart">Ulangi Misi</button>
+  </div>
+</section>
+
+<footer class="footer">
+  <span>Space Academy Adventure · Proyek Pembelajaran IPA — Tata Surya · Kelas IX SMP</span>
+</footer>
+
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
